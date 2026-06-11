@@ -1,81 +1,87 @@
 from flask import Flask, render_template, request
+import os
 
 app = Flask(__name__)
 
+# RUTA 1: La página de inicio (Donde el alumno carga las notas)
 @app.route('/')
-def home():
+def index():
     return render_template('index.html')
 
+# RUTA 2: El procesador (Donde se hacen las cuentas al tocar el botón)
 @app.route('/calcular', methods=['POST'])
 def calcular():
-    materia = request.form.get('materia', 'Materia').capitalize()
+    # Recibimos los datos del formulario de index.html
+    materia = request.form.get('materia', 'Materia')
     sistema = request.form.get('sistema', 'numerico')
-    limite = float(request.form.get('limite', 6))
     
-    puntos_necesarios_total = limite * 3
+    # Intentamos capturar las notas de los trimestres (si están vacías quedan en None)
+    t1 = request.form.get('t1')
+    t2 = request.form.get('t2')
+    t3 = request.form.get('t3')
     
-    nota1 = float(request.form.get('nota1') or 0)
-    nota2 = float(request.form.get('nota2') or 0)
-    nota3 = float(request.form.get('nota3') or 0)
-    
-    if nota1 == 7.50 and nota2 == 7.50 and nota3 == 7.50:
-        mensaje = "Tranquilo, se puede mejorar... El creador de esta cosa no llegaba al 8 en su país y miralo ahora, programando en modo Dios."
-        return render_template('resultado.html', promedio="7.50", mensaje=mensaje, color="#ff9900", materia=materia, recomendacion="", n1=7.50, n2=7.50, n3=7.50)
+    nota1 = float(t1) if t1 else None
+    nota2 = float(t2) if t2 else None
+    nota3 = float(t3) if t3 else None
 
-    puntos_acumulados = nota1 + nota2 + nota3
-    trimestres_cursados = sum(1 for n in [nota1, nota2, nota3] if n > 0)
-    
-    if trimestres_cursados > 0:
-        promedio_actual = round(puntos_acumulados / trimestres_cursados, 2)
-    else:
-        promedio_actual = 0
+    # LÓGICA DE CONTROL DE PROMEDIOS
+    nota_aprobacion = 6.0
+    promedio_actual = 0.0
+    mensaje = ""
+    color_texto = "#00ffcc" # Color neón por defecto (Aprobado/Buen camino)
 
-    recomendacion = ""
-    
-    if trimestres_cursados == 1:
-        puntos_restantes = puntos_necesarios_total - puntos_acumulados
-        nota_necesaria_promedio = round(puntos_restantes / 2, 2)
-        if nota_necesaria_promedio <= limite:
-            recomendacion = f"Para aprobar el año en {materia}, necesitás promediar un {nota_necesaria_promedio} entre el 2° y 3° trimestre. ¡Venís bien!"
+    # Caso 1: Tiene solo el primer trimestre cargado
+    if nota1 is not None and nota2 is None and nota3 is None:
+        promedio_actual = nota1
+        nota_necesaria = (nota_aprobacion * 3) - nota1
+        # Dividimos el resto en las dos materias que quedan
+        nota_por_trimestre = nota_necesaria / 2
+        
+        if nota_por_trimestre > 10:
+            mensaje = f"Alerta en {materia}: Necesitás más de 10 en los próximos trimestres. ¡A meterle garra!"
+            color_texto = "#ff3333" # Rojo de alerta
         else:
-            recomendacion = f"Ojo: Como el primer trimestre quedó flojo, necesitás meter un promedio pesado de {nota_necesaria_promedio} in los próximos dos para salvar el año."
+            mensaje = f"Vas por buen camino en {materia}. Necesitás un promedio de {nota_por_trimestre:.1f} en los próximos trimestres para aprobar."
+
+    # Caso 2: Tiene el primero y el segundo trimestre cargados
+    elif nota1 is not None and nota2 is not None and nota3 is None:
+        promedio_actual = (nota1 + nota2) / 2
+        nota_necesaria = (nota_aprobacion * 3) - (nota1 + nota2)
+        
+        if nota_necesaria <= 0:
+            mensaje = f"¡Felicidades en {materia}! Ya aprobaste la materia con las notas del 1° y 2° trimestre."
+        elif nota_necesaria > 10:
+            mensaje = f"Alerta en {materia}: Necesitás un {nota_necesaria:.1f} en el 3° trimestre. Se define en diciembre."
+            color_texto = "#ff3333"
+        else:
+            mensaje = f"Para aprobar {materia}, necesitás sacarte un {nota_necesaria:.1f} en el 3° trimestre."
+
+    # Caso 3: Tiene los tres trimestres cargados (Fin de año)
+    elif nota1 is not None and nota2 is not None and nota3 is not None:
+        promedio_actual = (nota1 + nota2 + nota3) / 3
+        if promedio_actual >= nota_aprobacion:
+            mensaje = f"¡Materia aprobada! Tu promedio final en {materia} es de {promedio_actual:.1f}."
+        else:
+            mensaje = f"Materia a diciembre/febrero. El promedio final en {materia} quedó en {promedio_actual:.1f}."
+            color_texto = "#ff3333"
             
-    elif trimestres_cursados == 2:
-        puntos_restantes = puntos_necesarios_total - puntos_acumulados
-        if puntos_restantes <= 0:
-            recomendacion = f"¡Felicidades! Ya sumaste los puntos necesarios. Estás aprobado en {materia} antes de terminar el año."
-        else:
-            nota_necesaria_final = round(puntos_restantes, 2)
-            if nota_necesaria_final <= 10:
-                recomendacion = f"En el 3° trimestre de {materia} necesitás sacarte un {nota_necesaria_final} o más para aprobar el año."
-            else:
-                recomendacion = f"Matemáticamente necesitás un {nota_necesaria_final} para llegar al {limite}. Vas a necesitar un recuperatorio o hablar con el profe, ¡pero no te rindas!"
-                
-    elif trimestres_cursados == 3:
-        if promedio_actual >= limite:
-            recomendacion = f"¡Año cerrado! Aprobaste {materia} con un promedio final de {promedio_actual}."
-        else:
-            recomendacion = f"El promedio final dio {promedio_actual}. Nos vemos en diciembre/febrero para levantar {materia}, ¡con garra que se saca!"
-
-    if promedio_actual >= 8:
-        color_texto = "#00ff88"
-        mensaje = f"¡Nivel excelente en {materia}!"
-    elif promedio_actual >= limite:
-        color_texto = "#a3ff00"
-        mensaje = f"Vas por buen camino en {materia}."
     else:
+        promedio_actual = 0.0
+        mensaje = "Por favor, carga al menos la nota del primer trimestre para calcular."
         color_texto = "#ff3333"
-        mensaje = f"Alerta en {materia}: Hay que ajustar los motores."
 
-    if sistema == "letras":
-        pass
+    # Retornamos las respuestas al diseño de resultados.html
+    return render_template(
+        'resultados.html',
+        materia=materia,
+        promedio=promedio_actual,
+        mensaje=mensaje,
+        color_texto=color_texto
+    )
 
-    return render_template('resultados.html', promedio=promedio_actual, mensaje=mensaje, color=color_texto, materia=materia, recomendacion=recomendacion, n1=nota1, n2=nota2, n3=nota3)
-
+# ARRANQUE DEL SERVIDOR (Configurado para Render o Local)
 if __name__ == '__main__':
     import os
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
     
-
-
