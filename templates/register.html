@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>LogiNote | Registro</title>
+    <style>
+        /* Usá el mismo estilo que el login de arriba */
+        body { background-color: #121212; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: #1e1e1e; padding: 40px; border-radius: 12px; width: 320px; text-align: center; }
+        input { width: 100%; padding: 12px; margin: 15px 0; background: #2c2c2c; border: 1px solid #444; color: white; border-radius: 8px; box-sizing: border-box; }
+        button { background: #8ab4f8; color: #121212; border: none; padding: 12px 20px; cursor: pointer; border-radius: 20px; font-weight: bold; width: 100%; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Registro</h2>
+        <form method="POST">
+            <input type="text" name="username" placeholder="Nuevo Usuario" required>
+            <input type="password" name="password" placeholder="Contraseña" required>
+            <button type="submit">Registrarse</button>
+        </form>
+    </div>
+</body>
+</html>
