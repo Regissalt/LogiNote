@@ -126,3 +126,4 @@ def calcular():
     conn.close()
     
     return render_template('resultados.html', materia=materia, promedio=promedio, mensaje=mensaje, color_texto=color) 
+
