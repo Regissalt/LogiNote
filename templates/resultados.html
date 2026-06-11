@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LogiNote - Resultados</title>
+    <style>
+        body {
+            background-color: #0b0f19;
+            color: #e2e8f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #111827;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.1);
+            width: 100%;
+            max-width: 450px;
+            border: 1px solid #1f2937;
+            text-align: center;
+        }
+        h1 {
+            color: #00ff88;
+            margin-bottom: 10px;
+            font-size: 26px;
+        }
+        .materia-title {
+            color: #e2e8f0;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .resultado-box {
+            background-color: #1f2937;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid #374151;
+        }
+        .promedio-numero {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .estado-mensaje {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .tabla-trimestres {
+            width: 100%;
+            margin-bottom: 25px;
+            border-collapse: collapse;
+        }
+        .tabla-trimestres th, .tabla-trimestres td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #374151;
+        }
+        .tabla-trimestres th {
+            color: #00ff88;
+            font-size: 14px;
+        }
+        .recomendacion-box {
+            background-color: #111827;
+            border-left: 4px solid #00ff88;
+            padding: 15px;
+            text-align: left;
+            border-radius: 4px;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+        .btn-volver {
+            display: inline-block;
+            width: 100%;
+            padding: 12px;
+            background-color: #1f2937;
+            color: #00ff88;
+            border: 1px solid #00ff88;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        .btn-volver:hover {
+            background-color: #00ff88;
+            color: #0b0f19;
+            box-shadow: 0 0 12px rgba(0, 255, 136, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>LogiNote 📊</h1>
+    <div class="materia-title">{{ materia }}</div>
+
+    <div class="resultado-box">
+        <div class="estado-mensaje" style="color: {{ color }};">{{ mensaje }}</div>
+        <div class="promedio-numero" style="color: {{ color }};">{{ promedio }}</div>
+        <div style="font-size: 12px; color: #9ca3af;">Promedio de lo cursado</div>
+    </div>
+
+    <table class="tabla-trimestres">
+        <thead>
+            <tr>
+                <th>Trimestre 1</th>
+                <th>Trimestre 2</th>
+                <th>Trimestre 3</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ n1 if n1 > 0 else '-' }}</td>
+                <td>{{ n2 if n2 > 0 else '-' }}</td>
+                <td>{{ n3 if n3 > 0 else '-' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    {% if recomendacion %}
+    <div class="recomendacion-box">
+        <strong style="color: #00ff88; display: block; margin-bottom: 5px;">Calendario de Metas:</strong>
+        {{ recomendacion }}
+    </div>
+    {% endif %}
+
+    <a href="/" class="btn-volver">Calcular otra materia</a>
+</div>
+
+</body>
+</html>
