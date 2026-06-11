@@ -27,115 +27,58 @@
         }
         h1 {
             color: #00ff88;
-            margin-bottom: 10px;
-            font-size: 26px;
+            margin-top: 0;
+            font-size: 24px;
         }
-        .materia-title {
-            color: #e2e8f0;
+        .materia-titulo {
             font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 25px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            color: #94a3b8;
+            margin-bottom: 20px;
         }
-        .resultado-box {
-            background-color: #1f2937;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            border: 1px solid #374151;
-        }
-        .promedio-numero {
+        .promedio-box {
             font-size: 48px;
             font-weight: bold;
-            margin: 10px 0;
+            margin: 20px 0;
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
         }
-        .estado-mensaje {
+        .mensaje-box {
             font-size: 16px;
-            font-weight: 600;
-        }
-        .tabla-trimestres {
-            width: 100%;
-            margin-bottom: 25px;
-            border-collapse: collapse;
-        }
-        .tabla-trimestres th, .tabla-trimestres td {
-            padding: 12px;
-            text-align: center;
-            border-bottom: 1px solid #374151;
-        }
-        .tabla-trimestres th {
-            color: #00ff88;
-            font-size: 14px;
-        }
-        .recomendacion-box {
-            background-color: #111827;
-            border-left: 4px solid #00ff88;
-            padding: 15px;
-            text-align: left;
-            border-radius: 4px;
-            font-size: 14px;
             line-height: 1.5;
             margin-bottom: 25px;
+            padding: 15px;
+            background-color: #1f2937;
+            border-radius: 8px;
+            border-left: 4px solid;
         }
         .btn-volver {
             display: inline-block;
-            width: 100%;
-            padding: 12px;
-            background-color: #1f2937;
-            color: #00ff88;
-            border: 1px solid #00ff88;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: bold;
-            box-sizing: border-box;
-            transition: all 0.3s ease;
-        }
-        .btn-volver:hover {
             background-color: #00ff88;
             color: #0b0f19;
-            box-shadow: 0 0 12px rgba(0, 255, 136, 0.3);
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        .btn-volver:hover {
+            background-color: #00cc6a;
         }
     </style>
 </head>
 <body>
-
-<div class="container">
-    <h1>LogiNote 📊</h1>
-    <div class="materia-title">{{ materia }}</div>
-
-    <div class="resultado-box">
-        <div class="estado-mensaje" style="color: {{ color }};">{{ mensaje }}</div>
-        <div class="promedio-numero" style="color: {{ color }};">{{ promedio }}</div>
-        <div style="font-size: 12px; color: #9ca3af;">Promedio de lo cursado</div>
+    <div class="container">
+        <h1>Análisis de Metas</h1>
+        <div class="materia-titulo">{{ materia }}</div>
+        
+        <div class="promedio-box" style="color: {{ color_texto }}">
+            {{ '%.2f' | format(promedio) }}
+        </div>
+        
+        <div class="mensaje-box" style="border-left-color: {{ color_texto }}">
+            {{ mensaje }}
+        </div>
+        
+        <a href="/" class="btn-volver">Calcular Otra Nota</a>
     </div>
-
-    <table class="tabla-trimestres">
-        <thead>
-            <tr>
-                <th>Trimestre 1</th>
-                <th>Trimestre 2</th>
-                <th>Trimestre 3</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>{{ n1 if n1 > 0 else '-' }}</td>
-                <td>{{ n2 if n2 > 0 else '-' }}</td>
-                <td>{{ n3 if n3 > 0 else '-' }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    {% if recomendacion %}
-    <div class="recomendacion-box">
-        <strong style="color: #00ff88; display: block; margin-bottom: 5px;">Calendario de Metas:</strong>
-        {{ recomendacion }}
-    </div>
-    {% endif %}
-
-    <a href="/" class="btn-volver">Calcular otra materia</a>
-</div>
-
 </body>
 </html>
