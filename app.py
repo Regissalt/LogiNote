@@ -27,7 +27,7 @@ def calcular():
     if nota1 is not None and nota2 is None and nota3 is None:
         promedio_actual = nota1
         
-        if nota1 == 7.50:
+        if abs(nota1 - 7.50) < 0.01:
             mensaje = f"¡Easter Egg activado en {materia}! Clavaste un 7.50 justo. El sistema dice que vas sobre rieles, crack."
             color_texto = "#ff00ff"
         else:
