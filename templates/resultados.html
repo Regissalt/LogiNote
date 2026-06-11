@@ -8,7 +8,7 @@
         body {
             background-color: #0b0f19;
             color: #e2e8f0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -27,7 +27,6 @@
         }
         h1 {
             color: #00ff88;
-            margin-top: 0;
             font-size: 24px;
         }
         .materia-titulo {
@@ -39,7 +38,6 @@
             font-size: 48px;
             font-weight: bold;
             margin: 20px 0;
-            text-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
         }
         .mensaje-box {
             font-size: 16px;
@@ -48,7 +46,6 @@
             padding: 15px;
             background-color: #1f2937;
             border-radius: 8px;
-            border-left: 4px solid;
         }
         .btn-volver {
             display: inline-block;
@@ -58,10 +55,6 @@
             padding: 12px 24px;
             border-radius: 6px;
             font-weight: bold;
-            transition: background 0.2s;
-        }
-        .btn-volver:hover {
-            background-color: #00cc6a;
         }
     </style>
 </head>
@@ -71,10 +64,10 @@
         <div class="materia-titulo">{{ materia }}</div>
         
         <div class="promedio-box" style="color: {{ color_texto }}">
-            {{ '%.2f' | format(promedio) }}
+            {{ promedio }}
         </div>
         
-        <div class="mensaje-box" style="border-left-color: {{ color_texto }}">
+        <div class="mensaje-box">
             {{ mensaje }}
         </div>
         

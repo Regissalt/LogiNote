@@ -25,12 +25,12 @@ def calcular():
     color_texto = "#00ffcc"
 
     if nota1 is not None and nota2 is None and nota3 is None:
-        promedio_actual = nota1
-        
         if abs(nota1 - 7.50) < 0.01:
+            promedio_actual = 7.5
             mensaje = f"¡Easter Egg activado en {materia}! Clavaste un 7.50 justo. El sistema dice que vas sobre rieles, crack."
             color_texto = "#ff00ff"
         else:
+            promedio_actual = nota1
             nota_necesaria = (nota_aprobacion * 3) - nota1
             nota_por_trimestre = nota_necesaria / 2
             
@@ -67,7 +67,7 @@ def calcular():
     return render_template(
         'resultados.html',
         materia=materia,
-        promedio=promedio_actual,
+        promedio=str(promedio_actual),
         mensaje=mensaje,
         color_texto=color_texto
     )
